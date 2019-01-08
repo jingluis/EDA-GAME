@@ -250,69 +250,6 @@ bool dijkstra_dist_soldat(int id,Pos p,matrix_visitat& stepped){
  }
 
 
- 
- //mirem si en la carretera hi ha algun soldat enemic
- Pos bfs_xocar_soldat_brutal(Pos p, matrix_posicio& m, matrix_visitat& stepped){
-    queue <Pos> aux;
-    Pos res = p;
-    matrix_visitat visited(60,vector <bool>(60,false));
-    aux.push(p);
-    bool trobat = false; visited[p.i][p.j] = true;
-    while(not aux.empty()){
-      Pos act = aux.front(); aux.pop();
-      //mirem si trobem un soldat enemic
-      if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Warrior and unit(cell(act).id).player != me() and eatable(act) and not stepped[act.i][act.j]){
-        return act;
-      }
-      else{
-        //només busquem per horitzontal i
-        for(int i = 0; i < 8 and not trobat; ++i){
-          Pos voltant;
-          voltant = act+Dir(i);
-          // si es posicio valida i no es ni aigua ni paret ni cotxe
-          if(pos_ok(voltant) and cell(voltant).id != -1 and unit(cell(voltant).id).type == Warrior and unit(cell(voltant).id).player != me()){
-            return act;
-          } else{
-            if(pos_ok(voltant) and not visited[voltant.i][voltant.j] and not stepped[voltant.i][voltant.j] and (cell(voltant).id == -1 or unit(cell(voltant).id).type != Car ) and cell(voltant).type != Desert and cell(voltant).type != Water and cell(voltant).type != City and cell(voltant).type != Station){
-              m[voltant.i][voltant.j] = act;
-              aux.push(voltant);
-              visited[voltant.i][voltant.j] = true;
-            }
-          }
-        }
-      }
-    }
-    return res;
- }
-
- //radar de 4*4, si no troba retorna la seva posició inicial q està
- Pos radar_soldat(Pos p, matrix_posicio& m){
-    queue <pair<Pos,int>> cua;
-    cua.push(make_pair(p,0));
-    matrix_visitat visited(60,vector <bool>(60,false));
-    bool trobat = false;
-    Pos res = p; visited[p.i][p.j] = true;
-    while(not cua.empty() and cua.front().second <= 8 and not trobat){
-      Pos aux = cua.front().first; int dd = cua.front().second + 1; cua.pop();
-      if(pos_ok(aux) and cell(aux).id != -1 and unit(cell(aux).id).type == Warrior and unit(cell(aux).id).player != me() and cell(aux).type != City){
-        trobat = true;
-        res = aux;
-      }
-      else{
-        for(int i = 0; i < 8; ++i){
-          Pos act  = aux + Dir(i);
-          if(pos_ok(act) and not visited[act.i][act.j] and cell(act).type != Wall and cell(act).type != Water and cell(act).type != City){
-            cua.push(make_pair(act,dd));
-            m[act.i][act.j] = aux;
-            visited[act.i][act.j] = true;
-          }
-        }
-      }
-    }
-    return res;
-}
-
-
   bool adja1(Pos p){
     for(int i = 0; i < 8; ++i){
       if(pos_ok(p+Dir(i)) and cell(p+Dir(i)).type == Road){
@@ -356,30 +293,6 @@ bool fck_cotxe(Pos p){
 }
 
 
- //trobar la gasolinera més aprop des d'una carretera
-
-
-  //funciona
- Pos bfs_buscar_carrer(matrix_posicio& m, Pos p, matrix_visitat & stepped){
-    matrix_visitat visited(60, vector<bool>(60,false));
-    queue <Pos> cua_no_visitat;
-    Pos inicial = p;
-    cua_no_visitat.push(inicial);
-    visited[p.i][p.j] = true; 
-    while(not cua_no_visitat.empty()){
-      Pos aux = cua_no_visitat.front(); cua_no_visitat.pop();
-      if(pos_ok(aux) and cell(aux).type == Road and not stepped[aux.i][aux.j]) return aux;
-      for(int i = 0; i < 8; ++i){
-        Pos voltant = aux + Dir(i);
-        if(pos_ok(voltant) and cell(voltant).type != Wall and cell(voltant).type != Water and not stepped[voltant.i][voltant.j] and cell(voltant).type != City and not visited[voltant.i][voltant.j] and (cell(voltant).id == -1 or unit(cell(voltant).id).type != Car)){
-          visited[voltant.i][voltant.j] = true;
-          m[voltant.i][voltant.j] = aux;
-          cua_no_visitat.push(voltant);
-        }
-      }
-    }
-    return p;
-  } 
   //busca la ciutat més proxima q no es meva, evitant a mi mateix, aigua i paret
   
   //funciona que no sigui la mateixa
@@ -1010,8 +923,7 @@ bool fck_cotxe(Pos p){
         }
       }
     }
- 
-   
+
       matrix_visitat stepped(60, vector<bool>(60,false)); // evitar que es matin entre ells
       move_warriors(stepped);
       move_car(stepped);
