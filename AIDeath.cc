@@ -28,7 +28,7 @@ struct PLAYER_NAME : public Player {
   typedef vector <vector <Pos> > _MP;
   typedef vector <vector <Pos> > V_CITY;
   typedef vector<int> VE;
-  _MD aigua,city_matriu,city,gasolina;
+  _MD water,city_matriu,city,gasolina;
   V_CITY cities;
   vector <int> dist_2_1,dist_2_2;
   vector <_MD> c;
@@ -55,8 +55,8 @@ struct PLAYER_NAME : public Player {
   bool find_warrior(Pos act){
     if(pos_ok(act) and cell(act).type == Road) return true;
       for(int i = 0; i < 24; ++i){
-        Pos voltant; voltant.i = act.i + dist_2_1[i]; voltant.j = act.j + dist_2_2[i];
-        if(pos_ok(voltant) and cell(voltant).type == Road){
+        Pos around; around.i = act.i + dist_2_1[i]; around.j = act.j + dist_2_2[i];
+        if(pos_ok(around) and cell(around).type == Road){
           return true;
         }
       }
@@ -82,52 +82,52 @@ struct PLAYER_NAME : public Player {
       bool first_step = true;
       for(int i = 0; i < 8; ++i){
         if(first_step){
-          Pos voltant = aux + Dir(i);
-	        if(pos_ok(voltant) and cell(voltant).type != Desert and cell(voltant).type != City and cell(voltant).type != Water and cell(voltant).type != Wall and 
-	        	cell(voltant).type != Station and kill_warrior(voltant) and (cell(voltant).id == -1 or unit(cell(voltant).id).type != Car) and not stepped[voltant.i][voltant.j] and
-	        	not visited[voltant.i][voltant.j]){
-		          if(dist[voltant.i][voltant.j] > dist[aux.i][aux.j] + 1){
-		            dist[voltant.i][voltant.j] = dist[aux.i][aux.j] + 1;
-		            visited[voltant.i][voltant.j] = true;
-		            prev[voltant.i][voltant.j].first = aux;
-		            prev[voltant.i][voltant.j].second = Dir(i);
-		            c.push(make_pair(dist[voltant.i][voltant.j],voltant));
+          Pos around = aux + Dir(i);
+	        if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
+	        	cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or unit(cell(around).id).type != Car) and not stepped[around.i][around.j] and
+	        	not visited[around.i][around.j]){
+		          if(dist[around.i][around.j] > dist[aux.i][aux.j] + 1){
+		            dist[around.i][around.j] = dist[aux.i][aux.j] + 1;
+		            visited[around.i][around.j] = true;
+		            prev[around.i][around.j].first = aux;
+		            prev[around.i][around.j].second = Dir(i);
+		            c.push(make_pair(dist[around.i][around.j],around));
 		          }
 	        }
-	        if(pos_ok(voltant) and cell(voltant).type != Road and cell(voltant).type != City and cell(voltant).type != Water and cell(voltant).type != Wall 
-	        	and cell(voltant).type != Station and kill_warrior(voltant) and (cell(voltant).id == -1 or unit(cell(voltant).id).type != Car ) and not stepped[voltant.i][voltant.j]
-	        	and not visited[voltant.i][voltant.j]){
-		          if(dist[voltant.i][voltant.j] > dist[aux.i][aux.j] + 4){
-		            dist[voltant.i][voltant.j] = dist[aux.i][aux.j] + 4;
-		            visited[voltant.i][voltant.j] = true;
-		            prev[voltant.i][voltant.j].first = aux;
-		            prev[voltant.i][voltant.j].second = Dir(i);
-		            c.push(make_pair(dist[voltant.i][voltant.j],voltant));
+	        if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
+	        	and cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or unit(cell(around).id).type != Car ) and not stepped[around.i][around.j]
+	        	and not visited[around.i][around.j]){
+		          if(dist[around.i][around.j] > dist[aux.i][aux.j] + 4){
+		            dist[around.i][around.j] = dist[aux.i][aux.j] + 4;
+		            visited[around.i][around.j] = true;
+		            prev[around.i][around.j].first = aux;
+		            prev[around.i][around.j].second = Dir(i);
+		            c.push(make_pair(dist[around.i][around.j],around));
 		          }
 	        } 
         }
         else{
-          Pos voltant = aux + Dir(i);
-        	if(pos_ok(voltant) and cell(voltant).type != Desert and cell(voltant).type != City and cell(voltant).type != Water and cell(voltant).type != Wall and 
-        		cell(voltant).type != Station and (cell(voltant).id == -1 or  unit(cell(voltant).id).type != Car) and not stepped[voltant.i][voltant.j] and
-        		not visited[voltant.i][voltant.j]){
-          		if(dist[voltant.i][voltant.j] > dist[aux.i][aux.j] + 1){
-		            dist[voltant.i][voltant.j] = dist[aux.i][aux.j] + 1;
-		            visited[voltant.i][voltant.j] = true;
-		            prev[voltant.i][voltant.j].first = aux;
-		            prev[voltant.i][voltant.j].second = Dir(i);
-		            c.push(make_pair(dist[voltant.i][voltant.j],voltant));
+          Pos around = aux + Dir(i);
+        	if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
+        		cell(around).type != Station and (cell(around).id == -1 or  unit(cell(around).id).type != Car) and not stepped[around.i][around.j] and
+        		not visited[around.i][around.j]){
+          		if(dist[around.i][around.j] > dist[aux.i][aux.j] + 1){
+		            dist[around.i][around.j] = dist[aux.i][aux.j] + 1;
+		            visited[around.i][around.j] = true;
+		            prev[around.i][around.j].first = aux;
+		            prev[around.i][around.j].second = Dir(i);
+		            c.push(make_pair(dist[around.i][around.j],around));
 	          }
         	}
-	        if(pos_ok(voltant) and cell(voltant).type != Road and cell(voltant).type != City and cell(voltant).type != Water and cell(voltant).type != Wall 
-	        	and cell(voltant).type != Station and (cell(voltant).id == -1 or  unit(cell(voltant).id).type != Car) and not stepped[voltant.i][voltant.j]
-	        	and not visited[voltant.i][voltant.j]){
-		          if(dist[voltant.i][voltant.j] > dist[aux.i][aux.j] + 4){
-		            dist[voltant.i][voltant.j] = dist[aux.i][aux.j] + 4;
-		            visited[voltant.i][voltant.j] = true;
-		            prev[voltant.i][voltant.j].first = aux;
-		            prev[voltant.i][voltant.j].second = Dir(i);
-		            c.push(make_pair(dist[voltant.i][voltant.j],voltant));
+	        if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
+	        	and cell(around).type != Station and (cell(around).id == -1 or  unit(cell(around).id).type != Car) and not stepped[around.i][around.j]
+	        	and not visited[around.i][around.j]){
+		          if(dist[around.i][around.j] > dist[aux.i][aux.j] + 4){
+		            dist[around.i][around.j] = dist[aux.i][aux.j] + 4;
+		            visited[around.i][around.j] = true;
+		            prev[around.i][around.j].first = aux;
+		            prev[around.i][around.j].second = Dir(i);
+		            c.push(make_pair(dist[around.i][around.j],around));
 		          }
 	        } 
         }   
@@ -163,52 +163,52 @@ struct PLAYER_NAME : public Player {
 	    bool first_step = true;
 	    for(int i = 0; i < 8; ++i){
 	      if(first_step){
-	        Pos voltant = act + Dir(i);
-	      	if(pos_ok(voltant) and cell(voltant).type != Desert and cell(voltant).type != City and cell(voltant).type != Water and cell(voltant).type != Wall and 
-	        	cell(voltant).type != Station and kill_warrior(voltant) and (cell(voltant).id == -1 or  (unit(cell(voltant).id).type != Car and unit(cell(voltant).id).player != me()) ) and not stepped[voltant.i][voltant.j] and
-	       		not visited[voltant.i][voltant.j]){
-		          if(dist[voltant.i][voltant.j] > dist[act.i][act.j] + 1){
-		            dist[voltant.i][voltant.j] = dist[act.i][act.j] + 1;
-		            visited[voltant.i][voltant.j] = true;
-		            prev[voltant.i][voltant.j].first = act;
-		            prev[voltant.i][voltant.j].second = Dir(i);
-		            c.push(make_pair(dist[voltant.i][voltant.j],voltant));
+	        Pos around = act + Dir(i);
+	      	if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
+	        	cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or  (unit(cell(around).id).type != Car and unit(cell(around).id).player != me()) ) and not stepped[around.i][around.j] and
+	       		not visited[around.i][around.j]){
+		          if(dist[around.i][around.j] > dist[act.i][act.j] + 1){
+		            dist[around.i][around.j] = dist[act.i][act.j] + 1;
+		            visited[around.i][around.j] = true;
+		            prev[around.i][around.j].first = act;
+		            prev[around.i][around.j].second = Dir(i);
+		            c.push(make_pair(dist[around.i][around.j],around));
 		          }
 	        }
-	        if(pos_ok(voltant) and cell(voltant).type != Road and cell(voltant).type != City and cell(voltant).type != Water and cell(voltant).type != Wall 
-	          and cell(voltant).type != Station and kill_warrior(voltant) and (cell(voltant).id == -1 or (unit(cell(voltant).id).type != Car and unit(cell(voltant).id).player != me())) and not stepped[voltant.i][voltant.j]
-	          and not visited[voltant.i][voltant.j]){
-		          if(dist[voltant.i][voltant.j] > dist[act.i][act.j] + 4){
-		            dist[voltant.i][voltant.j] = dist[act.i][act.j] + 4;
-		            visited[voltant.i][voltant.j] = true;
-		            prev[voltant.i][voltant.j].first = act;
-		            prev[voltant.i][voltant.j].second = Dir(i);
-		            c.push(make_pair(dist[voltant.i][voltant.j],voltant));
+	        if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
+	          and cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or (unit(cell(around).id).type != Car and unit(cell(around).id).player != me())) and not stepped[around.i][around.j]
+	          and not visited[around.i][around.j]){
+		          if(dist[around.i][around.j] > dist[act.i][act.j] + 4){
+		            dist[around.i][around.j] = dist[act.i][act.j] + 4;
+		            visited[around.i][around.j] = true;
+		            prev[around.i][around.j].first = act;
+		            prev[around.i][around.j].second = Dir(i);
+		            c.push(make_pair(dist[around.i][around.j],around));
 		          }
 	        } 
 	      }
 	      else{
-	        Pos voltant = act + Dir(i);
-	        if(pos_ok(voltant) and cell(voltant).type != Desert and cell(voltant).type != City and cell(voltant).type != Water and cell(voltant).type != Wall and 
-	        	cell(voltant).type != Station and (cell(voltant).id == -1 or  (unit(cell(voltant).id).type != Car and unit(cell(voltant).id).player != me()) ) and not stepped[voltant.i][voltant.j] and
-	         	not visited[voltant.i][voltant.j]){
-		          if(dist[voltant.i][voltant.j] > dist[act.i][act.j] + 1){
-		            dist[voltant.i][voltant.j] = dist[act.i][act.j] + 1;
-		            visited[voltant.i][voltant.j] = true;
-		            prev[voltant.i][voltant.j].first = act;
-		            prev[voltant.i][voltant.j].second = Dir(i);
-		            c.push(make_pair(dist[voltant.i][voltant.j],voltant));
+	        Pos around = act + Dir(i);
+	        if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
+	        	cell(around).type != Station and (cell(around).id == -1 or  (unit(cell(around).id).type != Car and unit(cell(around).id).player != me()) ) and not stepped[around.i][around.j] and
+	         	not visited[around.i][around.j]){
+		          if(dist[around.i][around.j] > dist[act.i][act.j] + 1){
+		            dist[around.i][around.j] = dist[act.i][act.j] + 1;
+		            visited[around.i][around.j] = true;
+		            prev[around.i][around.j].first = act;
+		            prev[around.i][around.j].second = Dir(i);
+		            c.push(make_pair(dist[around.i][around.j],around));
 		          }
 	        }
-	        if(pos_ok(voltant) and cell(voltant).type != Road and cell(voltant).type != City and cell(voltant).type != Water and cell(voltant).type != Wall 
-	         	and cell(voltant).type != Station and (cell(voltant).id == -1 or(unit(cell(voltant).id).type != Car and unit(cell(voltant).id).player != me())) and not stepped[voltant.i][voltant.j]
-	         	and not visited[voltant.i][voltant.j]){
-		          if(dist[voltant.i][voltant.j] > dist[act.i][act.j] + 4){
-		            dist[voltant.i][voltant.j] = dist[act.i][act.j] + 4;
-		            visited[voltant.i][voltant.j] = true;
-		            prev[voltant.i][voltant.j].first = act;
-		            prev[voltant.i][voltant.j].second = Dir(i);
-		            c.push(make_pair(dist[voltant.i][voltant.j],voltant));
+	        if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
+	         	and cell(around).type != Station and (cell(around).id == -1 or(unit(cell(around).id).type != Car and unit(cell(around).id).player != me())) and not stepped[around.i][around.j]
+	         	and not visited[around.i][around.j]){
+		          if(dist[around.i][around.j] > dist[act.i][act.j] + 4){
+		            dist[around.i][around.j] = dist[act.i][act.j] + 4;
+		            visited[around.i][around.j] = true;
+		            prev[around.i][around.j].first = act;
+		            prev[around.i][around.j].second = Dir(i);
+		            c.push(make_pair(dist[around.i][around.j],around));
 		          }
 	        } 
 	      }   
@@ -333,12 +333,12 @@ struct PLAYER_NAME : public Player {
         }
       } 
       for(int i = 0; i < 8; ++i){
-        Pos voltant = aux + Dir(i);
-        if(pos_ok(voltant) and cell(voltant).type != Wall and cell(voltant).type != Water and not stepped[voltant.i][voltant.j] and cell(voltant).type != City and cell(voltant).type != Station and cell(voltant).type != Desert
-        	and not visited[voltant.i][voltant.j] and (cell(voltant).id == -1 or (unit(cell(voltant).id).type != Car))){
-          	visited[voltant.i][voltant.j] = true;
-          	m[voltant.i][voltant.j] = aux;
-          	c_no_visitat.push(voltant);
+        Pos around = aux + Dir(i);
+        if(pos_ok(around) and cell(around).type != Wall and cell(around).type != Water and not stepped[around.i][around.j] and cell(around).type != City and cell(around).type != Station and cell(around).type != Desert
+        	and not visited[around.i][around.j] and (cell(around).id == -1 or (unit(cell(around).id).type != Car))){
+          	visited[around.i][around.j] = true;
+          	m[around.i][around.j] = aux;
+          	c_no_visitat.push(around);
         }
       }
     }
@@ -393,10 +393,10 @@ struct PLAYER_NAME : public Player {
 	    else if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Desert and adja1(act)) return true;
 	    else if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Desert and dd-1 <= 1) return true;
 	    for(int i = 0; i < 8; ++i){
-	      Pos voltant = act + Dir(i);
-	      if(pos_ok(voltant) and not visited[voltant.i][voltant.j] and (cell(voltant).type == Desert or cell(voltant).type == Road)){
-	        visited[voltant.i][voltant.j] = true;
-	        c.push(make_pair(voltant,dd));
+	      Pos around = act + Dir(i);
+	      if(pos_ok(around) and not visited[around.i][around.j] and (cell(around).type == Desert or cell(around).type == Road)){
+	        visited[around.i][around.j] = true;
+	        c.push(make_pair(around,dd));
 	      }
 	    } 
 	  }
@@ -425,12 +425,12 @@ struct PLAYER_NAME : public Player {
     while(not c_no_visitat.empty()){
       Pos aux = c_no_visitat.front().first; int dd = c_no_visitat.front().second + 1; c_no_visitat.pop();
       for(int i = 0; i < 8; ++i){
-        Pos voltant = aux + Dir(i);
-        if(pos_ok(voltant) and cell(voltant).type != Wall and cell(voltant).type != Station and not visited[voltant.i][voltant.j]){
-          visited[voltant.i][voltant.j] = true;
-          if(m[voltant.i][voltant.j] > dd){
-            m[voltant.i][voltant.j] = dd;
-            c_no_visitat.push(make_pair(voltant,dd));
+        Pos around = aux + Dir(i);
+        if(pos_ok(around) and cell(around).type != Wall and cell(around).type != Station and not visited[around.i][around.j]){
+          visited[around.i][around.j] = true;
+          if(m[around.i][around.j] > dd){
+            m[around.i][around.j] = dd;
+            c_no_visitat.push(make_pair(around,dd));
           }
         }
       }
@@ -446,12 +446,12 @@ struct PLAYER_NAME : public Player {
     while(not c_no_visitat.empty()){
       Pos aux = c_no_visitat.front().first; int dd = c_no_visitat.front().second + 1; c_no_visitat.pop();
       for(int i = 0; i < 8; ++i){
-        Pos voltant = aux + Dir(i);
-        if(pos_ok(voltant) and cell(voltant).type != Wall and cell(voltant).type != Water and cell(voltant).type != Station and not visited[voltant.i][voltant.j]){
-          visited[voltant.i][voltant.j] = true;
-          if(m[voltant.i][voltant.j] > dd){
-            m[voltant.i][voltant.j] = dd;
-            c_no_visitat.push(make_pair(voltant,dd));
+        Pos around = aux + Dir(i);
+        if(pos_ok(around) and cell(around).type != Wall and cell(around).type != Water and cell(around).type != Station and not visited[around.i][around.j]){
+          visited[around.i][around.j] = true;
+          if(m[around.i][around.j] > dd){
+            m[around.i][around.j] = dd;
+            c_no_visitat.push(make_pair(around,dd));
           }
         }
       }
@@ -569,7 +569,7 @@ struct PLAYER_NAME : public Player {
 
 
   void i_move_warriors(int id, Pos p, _MV& stepped,vector <vector<int> >& players,vector <bool>& city_enviat){
-    if(unit(id).water <= 15 or unit(id).water <= aigua[p.i][p.j]+3){
+    if(unit(id).water <= 15 or unit(id).water <= water[p.i][p.j]+3){
       for(int i = 0; i < 8; ++i){
         Pos aux = p +Dir(i);
         if(pos_ok(aux) and cell(aux).id != -1 and unit(cell(aux).id).type == Warrior and unit(cell(aux).id).player != me()){
@@ -582,7 +582,7 @@ struct PLAYER_NAME : public Player {
 
       for(int j = 0; j < 8; ++j){
         Pos aux = p + Dir(j);
-        if(pos_ok(aux) and aigua[aux.i][aux.j] < aigua[p.i][p.j] and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not see_car(aux) and not stepped[aux.i][aux.j]){
+        if(pos_ok(aux) and water[aux.i][aux.j] < water[p.i][p.j] and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not see_car(aux) and not stepped[aux.i][aux.j]){
           command(id,Dir(j));
           stepped[aux.i][aux.j] = true;
           return;
@@ -591,7 +591,7 @@ struct PLAYER_NAME : public Player {
       
       for(int j = 0; j < 9; ++j){
         Pos aux = p + Dir(j);
-        if(pos_ok(aux) and aigua[aux.i][aux.j] == aigua[p.i][p.j] and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not see_car(aux) and not stepped[aux.i][aux.j]){
+        if(pos_ok(aux) and water[aux.i][aux.j] == water[p.i][p.j] and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not see_car(aux) and not stepped[aux.i][aux.j]){
           command(id,Dir(j));
           stepped[aux.i][aux.j] = true;
           return;
@@ -600,7 +600,7 @@ struct PLAYER_NAME : public Player {
          
       for(int j = 0; j < 9; ++j){
         Pos aux = p + Dir(j);
-        if(pos_ok(aux) and aigua[aux.i][aux.j] < unit(id).water and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not see_car(aux) and not stepped[aux.i][aux.j]){
+        if(pos_ok(aux) and water[aux.i][aux.j] < unit(id).water and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not see_car(aux) and not stepped[aux.i][aux.j]){
           command(id,Dir(j));
           stepped[aux.i][aux.j] = true;
           return;
@@ -626,7 +626,7 @@ struct PLAYER_NAME : public Player {
 
       for(int j = 0; j < 8; ++j){
         Pos aux = p + Dir(j);
-        if(pos_ok(aux) and aigua[aux.i][aux.j] < aigua[p.i][p.j] and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not stepped[aux.i][aux.j]){
+        if(pos_ok(aux) and water[aux.i][aux.j] < water[p.i][p.j] and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not stepped[aux.i][aux.j]){
           command(id,Dir(j));
           stepped[aux.i][aux.j] = true;
           return;
@@ -635,7 +635,7 @@ struct PLAYER_NAME : public Player {
       
       for(int j = 0; j < 9; ++j){
         Pos aux = p + Dir(j);
-        if(pos_ok(aux) and aigua[aux.i][aux.j] == aigua[p.i][p.j] and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and  not stepped[aux.i][aux.j]){
+        if(pos_ok(aux) and water[aux.i][aux.j] == water[p.i][p.j] and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and  not stepped[aux.i][aux.j]){
           command(id,Dir(j));
           stepped[aux.i][aux.j] = true;
           return;
@@ -644,7 +644,7 @@ struct PLAYER_NAME : public Player {
       
       for(int j = 0; j < 9; ++j){
          Pos aux = p + Dir(j);
-         if(pos_ok(aux) and aigua[aux.i][aux.j] < unit(id).water and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and  not stepped[aux.i][aux.j]){
+         if(pos_ok(aux) and water[aux.i][aux.j] < unit(id).water and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and  not stepped[aux.i][aux.j]){
             command(id,Dir(j));
             stepped[aux.i][aux.j] = true;
             return;
@@ -865,7 +865,7 @@ struct PLAYER_NAME : public Player {
   void play () {
     //initialitzacions
     if(round() == 0){
-      aigua = _MD(60,vector <int>(60,61));
+      water = _MD(60,vector <int>(60,61));
       city = _MD(60,vector <int>(60,61));
       _MV m_citi(60,vector <bool>(60,false));
       city_matriu = _MD(60,vector <int>(60,9));
@@ -878,7 +878,7 @@ struct PLAYER_NAME : public Player {
       for(int i = 0; i < 60; ++i){
         for(int j = 0; j < 60; ++j){
           Pos p; p.i = i; p.j = j;
-          if(cell(i,j).type == Water) bfs_water(aigua,p);
+          if(cell(i,j).type == Water) bfs_water(water,p);
           else if(cell(i,j).type == City){
             bfs_city(city,p);
             if(not m_citi[i][j]){
