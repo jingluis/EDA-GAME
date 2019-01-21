@@ -36,7 +36,7 @@ struct PLAYER_NAME : public Player {
 
 
   /* TRUE if position p is adjacent to Station, FALSE if not */
-  bool adja(Pos p){
+  bool adjacent(Pos p){
     for(int i = 0; i < 8; ++i){
       if(pos_ok(p+Dir(i)) and cell(p+Dir(i)).type == Station) return true;
     }
@@ -76,7 +76,7 @@ struct PLAYER_NAME : public Player {
     Pos res;
     while(not c.empty() and not found){
       Pos aux = c.top().second; c.pop();
-      if(pos_ok(aux) and adja(aux) and not stepped[aux.i][aux.j] and (cell(aux).id == -1 or unit(cell(aux).id).type != Car)) {
+      if(pos_ok(aux) and adjacent(aux) and not stepped[aux.i][aux.j] and (cell(aux).id == -1 or unit(cell(aux).id).type != Car)) {
         res = aux;
         found = true;
       }
@@ -245,7 +245,7 @@ struct PLAYER_NAME : public Player {
  }
 
 
-  bool adja1(Pos p){
+  bool adjacent1(Pos p){
     for(int i = 0; i < 8; ++i){
       if(pos_ok(p+Dir(i)) and cell(p+Dir(i)).type == Road){
           return true;
@@ -391,7 +391,7 @@ struct PLAYER_NAME : public Player {
 	  while(not c.empty() and c.front().second <= 4){
 	    Pos act = c.front().first; int dd = c.front().second + 1; c.pop();
 	    if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Road and unit(cell(act).id).food > 4) return true;
-	    else if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Desert and adja1(act)) return true;
+	    else if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Desert and adjacent1(act)) return true;
 	    else if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Desert and dd-1 <= 1) return true;
 	    for(int i = 0; i < 8; ++i){
 	      Pos around = act + Dir(i);
@@ -407,7 +407,7 @@ struct PLAYER_NAME : public Player {
 
 	/*check wether the position p is safe or not (warrior)*/
 	bool see_car(Pos p){
-		if( cell(p).type == Road or (cell(p).type == Desert and adja1(p))){
+		if( cell(p).type == Road or (cell(p).type == Desert and adjacent1(p))){
 			if(radar_cotxe(p)) return true;
 		}
 	  for(int i = 0; i < 8; ++i){
