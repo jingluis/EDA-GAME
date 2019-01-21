@@ -30,7 +30,8 @@ struct PLAYER_NAME : public Player {
   typedef vector<int> VE;
   _MD water,city_matriu,city,gasolina;
   V_CITY cities;
-  vector <int> dist_2_1,dist_2_2;
+  int dist2_i[24] = {-1,0,1,1,1,0,-1,-1,-2,-1,0,1,2,2,2,2,2,1,0,-1,-2,-2,-2,-2};
+  int dist2_j[24] = {-1,-1,-1,0,1,1,1,0,-2,-2,-2,-2,-2,-1,0,1,2,2,2,2,2,-1,0,1};
   vector <_MD> c;
 
 
@@ -55,7 +56,7 @@ struct PLAYER_NAME : public Player {
   bool find_warrior(Pos act){
     if(pos_ok(act) and cell(act).type == Road) return true;
       for(int i = 0; i < 24; ++i){
-        Pos around; around.i = act.i + dist_2_1[i]; around.j = act.j + dist_2_2[i];
+        Pos around; around.i = act.i + dist2_i[i]; around.j = act.j + dist2_j[i];
         if(pos_ok(around) and cell(around).type == Road){
           return true;
         }
@@ -415,70 +416,6 @@ struct PLAYER_NAME : public Player {
 	  }
 	  return false;
 	}
-
-	/* bfs algorithm to find the shortest distance to reach water */
-  void bfs_water(_MD& m, Pos initial){
-    _MV visited(60, vector<bool>(60,false));
-    queue < pair<Pos,int> > c_no_visitat;
-    c_no_visitat.push(make_pair(initial,0));
-    visited[initial.i][initial.j] = true; m[initial.i][initial.j] = 0;
-    while(not c_no_visitat.empty()){
-      Pos aux = c_no_visitat.front().first; int dd = c_no_visitat.front().second + 1; c_no_visitat.pop();
-      for(int i = 0; i < 8; ++i){
-        Pos around = aux + Dir(i);
-        if(pos_ok(around) and cell(around).type != Wall and cell(around).type != Station and not visited[around.i][around.j]){
-          visited[around.i][around.j] = true;
-          if(m[around.i][around.j] > dd){
-            m[around.i][around.j] = dd;
-            c_no_visitat.push(make_pair(around,dd));
-          }
-        }
-      }
-    }
-  }
-
-  /* bfs algorithm to find the shortest distance to reach city */
-  void bfs_city(_MD& m, Pos initial){
-    _MV visited(60, vector<bool>(60,false));
-    queue < pair<Pos,int> > c_no_visitat;
-    c_no_visitat.push(make_pair(initial,0));
-    visited[initial.i][initial.j] = true; m[initial.i][initial.j] = 0;
-    while(not c_no_visitat.empty()){
-      Pos aux = c_no_visitat.front().first; int dd = c_no_visitat.front().second + 1; c_no_visitat.pop();
-      for(int i = 0; i < 8; ++i){
-        Pos around = aux + Dir(i);
-        if(pos_ok(around) and cell(around).type != Wall and cell(around).type != Water and cell(around).type != Station and not visited[around.i][around.j]){
-          visited[around.i][around.j] = true;
-          if(m[around.i][around.j] > dd){
-            m[around.i][around.j] = dd;
-            c_no_visitat.push(make_pair(around,dd));
-          }
-        }
-      }
-    }
-  }  
- 
-  
-  void start_city(V_CITY& cities, _MV& m_citi, _MD& city_matriu, int id, Pos p){
-    if(not pos_ok(p) or cell(p).type != City or m_citi[p.i][p.j]) return;
-    m_citi[p.i][p.j] = true;
-    cities[id].push_back(p);
-    city_matriu[p.i][p.j] = id;
-    for(int i = 0; i < 8; ++i) start_city(cities,m_citi,city_matriu, id, p + Dir(i));
-  }
-  
-  
-  void count_warriors(vector <vector<int> >& players, V_CITY& c){
-    for(int i = 0; i < 8; ++i){
-      for(auto w : c[i]){
-        // si hi ha algun puto jugador
-        if(cell(w).id != -1){
-          int p = unit(cell(w).id).player;
-          ++ players[i][p];
-        }
-      }
-    }
-  }
 
   bool pos_safe_warrior(Pos p){
     for(int i = 0; i < 8; ++i){
@@ -860,6 +797,69 @@ struct PLAYER_NAME : public Player {
     }
   }
   
+  /* bfs algorithm to find the shortest distance to reach water */
+  void bfs_water(_MD& m, Pos initial){
+    _MV visited(60, vector<bool>(60,false));
+    queue < pair<Pos,int> > c_no_visitat;
+    c_no_visitat.push(make_pair(initial,0));
+    visited[initial.i][initial.j] = true; m[initial.i][initial.j] = 0;
+    while(not c_no_visitat.empty()){
+      Pos aux = c_no_visitat.front().first; int dd = c_no_visitat.front().second + 1; c_no_visitat.pop();
+      for(int i = 0; i < 8; ++i){
+        Pos around = aux + Dir(i);
+        if(pos_ok(around) and cell(around).type != Wall and cell(around).type != Station and not visited[around.i][around.j]){
+          visited[around.i][around.j] = true;
+          if(m[around.i][around.j] > dd){
+            m[around.i][around.j] = dd;
+            c_no_visitat.push(make_pair(around,dd));
+          }
+        }
+      }
+    }
+  }
+
+  /* bfs algorithm to find the shortest distance to reach city */
+  void bfs_city(_MD& m, Pos initial){
+    _MV visited(60, vector<bool>(60,false));
+    queue < pair<Pos,int> > c_no_visitat;
+    c_no_visitat.push(make_pair(initial,0));
+    visited[initial.i][initial.j] = true; m[initial.i][initial.j] = 0;
+    while(not c_no_visitat.empty()){
+      Pos aux = c_no_visitat.front().first; int dd = c_no_visitat.front().second + 1; c_no_visitat.pop();
+      for(int i = 0; i < 8; ++i){
+        Pos around = aux + Dir(i);
+        if(pos_ok(around) and cell(around).type != Wall and cell(around).type != Water and cell(around).type != Station and not visited[around.i][around.j]){
+          visited[around.i][around.j] = true;
+          if(m[around.i][around.j] > dd){
+            m[around.i][around.j] = dd;
+            c_no_visitat.push(make_pair(around,dd));
+          }
+        }
+      }
+    }
+  }  
+ 
+  
+  void start_city(V_CITY& cities, _MV& m_citi, _MD& city_matriu, int id, Pos p){
+    if(not pos_ok(p) or cell(p).type != City or m_citi[p.i][p.j]) return;
+    m_citi[p.i][p.j] = true;
+    cities[id].push_back(p);
+    city_matriu[p.i][p.j] = id;
+    for(int i = 0; i < 8; ++i) start_city(cities,m_citi,city_matriu, id, p + Dir(i));
+  }
+  
+  
+  void count_warriors(vector <vector<int> >& players, V_CITY& c){
+    for(int i = 0; i < 8; ++i){
+      for(auto w : c[i]){
+        // si hi ha algun puto jugador
+        if(cell(w).id != -1){
+          int p = unit(cell(w).id).player;
+          ++ players[i][p];
+        }
+      }
+    }
+  }
 
 
   void play () {
@@ -870,9 +870,6 @@ struct PLAYER_NAME : public Player {
       _MV m_citi(60,vector <bool>(60,false));
       city_matriu = _MD(60,vector <int>(60,9));
       c = vector <_MD>(8,_MD(60,vector <int>(60,61)));
-      dist_2_1 = dist_2_2 = vector <int>(24);
-      dist_2_2[0] = -1;dist_2_2[1] = 0;dist_2_2[2] = 1;dist_2_2[3] = 1;dist_2_2[4] = 1;dist_2_2[5] = 0;dist_2_2[6] = -1;dist_2_2[7] = -1;dist_2_2[8] = -2;dist_2_2[9] = -1;dist_2_2[10] = 0;dist_2_2[11] = 1;dist_2_2[12] = 2;dist_2_2[13] = 2;dist_2_2[14] = 2;dist_2_2[15] = 2;dist_2_2[16] = 2;dist_2_2[17] = 1;dist_2_2[18] = 0;dist_2_2[19] = -1;dist_2_2[20] = -2;dist_2_2[21] = -2;dist_2_2[22] = -2;dist_2_2[23] = -2;
-      dist_2_1[0] = -1;dist_2_1[1] = -1;dist_2_1[2] = -1;dist_2_1[3] = 0;dist_2_1[4] = 1;dist_2_1[5] = 1;dist_2_1[6] = 1;dist_2_1[7] = 0;dist_2_1[8] = -2;dist_2_1[9] = -2;dist_2_1[10] = -2;dist_2_1[11] = -2;dist_2_1[12] = -2;dist_2_1[13] = -1;dist_2_1[14] = 0;dist_2_1[15] = 1;dist_2_1[16] = 2;dist_2_1[17] = 2;dist_2_1[18] = 2;dist_2_1[19] = 2;dist_2_1[20] = 2;dist_2_1[21] = -1;dist_2_1[22] = 0;dist_2_1[23] = 1;
       cities = V_CITY(8);
       int id = 0;
       for(int i = 0; i < 60; ++i){
@@ -896,7 +893,7 @@ struct PLAYER_NAME : public Player {
       }
     }
 
-    _MV stepped(60, vector<bool>(60,false)); // evitar que es matin entre ells
+    _MV stepped(60, vector<bool>(60,false)); 
     move_warriors(stepped);
     move_car(stepped); 
   }
