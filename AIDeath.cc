@@ -43,13 +43,13 @@ struct PLAYER_NAME : public Player {
     return false;
   }
 
- 	/* TRUE if there is no other enemy car willing to kill a warrior */
+  /* TRUE if there is no other enemy car willing to kill a warrior */
   bool kill_warrior(Pos p){
-	  for(int i = 0; i < 8; ++i){
-	    Pos aux = p + Dir(i);
-	    if(pos_ok(aux) and cell(aux).id != -1 and unit(cell(aux).id).type == Car and unit(cell(aux).id).player != me() and cell(aux).type != City) return false;
-	  }
-	  return true;
+      for(int i = 0; i < 8; ++i){
+        Pos aux = p + Dir(i);
+        if(pos_ok(aux) and cell(aux).id != -1 and unit(cell(aux).id).type == Car and unit(cell(aux).id).player != me() and cell(aux).type != City) return false;
+      }
+      return true;
   }
   
   /* TRUE if there is an enemy warrior in distance 2 */
@@ -64,7 +64,7 @@ struct PLAYER_NAME : public Player {
       return false;
   }
 
-  /* Dijkstra algorithm to find gas station */
+  /* Dijkstra algorithm to find the nearest gas station */
   void dijkstra_fuel(int id, Pos p, _MV& stepped){
     _MD dist(60,vector<int>(60,65));
     _MV visited(60,vector<bool>(60,false));
@@ -84,53 +84,53 @@ struct PLAYER_NAME : public Player {
       for(int i = 0; i < 8; ++i){
         if(first_step){
           Pos around = aux + Dir(i);
-	        if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
-	        	cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or unit(cell(around).id).type != Car) and not stepped[around.i][around.j] and
-	        	not visited[around.i][around.j]){
-		          if(dist[around.i][around.j] > dist[aux.i][aux.j] + 1){
-		            dist[around.i][around.j] = dist[aux.i][aux.j] + 1;
-		            visited[around.i][around.j] = true;
-		            prev[around.i][around.j].first = aux;
-		            prev[around.i][around.j].second = Dir(i);
-		            c.push(make_pair(dist[around.i][around.j],around));
-		          }
-	        }
-	        if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
-	        	and cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or unit(cell(around).id).type != Car ) and not stepped[around.i][around.j]
-	        	and not visited[around.i][around.j]){
-		          if(dist[around.i][around.j] > dist[aux.i][aux.j] + 4){
-		            dist[around.i][around.j] = dist[aux.i][aux.j] + 4;
-		            visited[around.i][around.j] = true;
-		            prev[around.i][around.j].first = aux;
-		            prev[around.i][around.j].second = Dir(i);
-		            c.push(make_pair(dist[around.i][around.j],around));
-		          }
-	        } 
+            if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
+                cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or unit(cell(around).id).type != Car) and not stepped[around.i][around.j] and
+                not visited[around.i][around.j]){
+                  if(dist[around.i][around.j] > dist[aux.i][aux.j] + 1){
+                    dist[around.i][around.j] = dist[aux.i][aux.j] + 1;
+                    visited[around.i][around.j] = true;
+                    prev[around.i][around.j].first = aux;
+                    prev[around.i][around.j].second = Dir(i);
+                    c.push(make_pair(dist[around.i][around.j],around));
+                  }
+            }
+            if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
+                and cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or unit(cell(around).id).type != Car ) and not stepped[around.i][around.j]
+                and not visited[around.i][around.j]){
+                  if(dist[around.i][around.j] > dist[aux.i][aux.j] + 4){
+                    dist[around.i][around.j] = dist[aux.i][aux.j] + 4;
+                    visited[around.i][around.j] = true;
+                    prev[around.i][around.j].first = aux;
+                    prev[around.i][around.j].second = Dir(i);
+                    c.push(make_pair(dist[around.i][around.j],around));
+                  }
+            } 
         }
         else{
           Pos around = aux + Dir(i);
-        	if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
-        		cell(around).type != Station and (cell(around).id == -1 or  unit(cell(around).id).type != Car) and not stepped[around.i][around.j] and
-        		not visited[around.i][around.j]){
-          		if(dist[around.i][around.j] > dist[aux.i][aux.j] + 1){
-		            dist[around.i][around.j] = dist[aux.i][aux.j] + 1;
-		            visited[around.i][around.j] = true;
-		            prev[around.i][around.j].first = aux;
-		            prev[around.i][around.j].second = Dir(i);
-		            c.push(make_pair(dist[around.i][around.j],around));
-	          }
-        	}
-	        if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
-	        	and cell(around).type != Station and (cell(around).id == -1 or  unit(cell(around).id).type != Car) and not stepped[around.i][around.j]
-	        	and not visited[around.i][around.j]){
-		          if(dist[around.i][around.j] > dist[aux.i][aux.j] + 4){
-		            dist[around.i][around.j] = dist[aux.i][aux.j] + 4;
-		            visited[around.i][around.j] = true;
-		            prev[around.i][around.j].first = aux;
-		            prev[around.i][around.j].second = Dir(i);
-		            c.push(make_pair(dist[around.i][around.j],around));
-		          }
-	        } 
+            if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
+                cell(around).type != Station and (cell(around).id == -1 or  unit(cell(around).id).type != Car) and not stepped[around.i][around.j] and
+                not visited[around.i][around.j]){
+                if(dist[around.i][around.j] > dist[aux.i][aux.j] + 1){
+                    dist[around.i][around.j] = dist[aux.i][aux.j] + 1;
+                    visited[around.i][around.j] = true;
+                    prev[around.i][around.j].first = aux;
+                    prev[around.i][around.j].second = Dir(i);
+                    c.push(make_pair(dist[around.i][around.j],around));
+              }
+            }
+            if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
+                and cell(around).type != Station and (cell(around).id == -1 or  unit(cell(around).id).type != Car) and not stepped[around.i][around.j]
+                and not visited[around.i][around.j]){
+                  if(dist[around.i][around.j] > dist[aux.i][aux.j] + 4){
+                    dist[around.i][around.j] = dist[aux.i][aux.j] + 4;
+                    visited[around.i][around.j] = true;
+                    prev[around.i][around.j].first = aux;
+                    prev[around.i][around.j].second = Dir(i);
+                    c.push(make_pair(dist[around.i][around.j],around));
+                  }
+            } 
         }   
         if(i == 7) first_step = false;     
       }
@@ -145,85 +145,85 @@ struct PLAYER_NAME : public Player {
 
 
   
-	/*Dijkstra algorithm to find enemy warriors */
-	bool dijkstra_find_warrior(int id,Pos p,_MV& stepped){
-	  _MD dist(60,vector<int>(60,9999999));
-	  _MV visited(60,vector<bool>(60,false));
-	  dist[p.i][p.j] = 0; visited[p.i][p.j] = true;
-	  vector < vector< pair<Pos,Dir> > > prev(60, vector< pair<Pos,Dir> >(60));
-	  priority_queue < pair<int,Pos>, vector<pair<int,Pos> >, greater<pair<int,Pos>> > c;
-	  c.push(make_pair(0,p));
-	  bool found = false;
-	  Pos res;
-	  while(not c.empty() and not found){
-	    Pos act = c.top().second; c.pop();
-	    if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Warrior and unit(cell(act).id).player != me() and find_warrior(act) and not stepped[act.i][act.j]) {
-	      res = act;
-	      found = true;
-	    }
-	    bool first_step = true;
-	    for(int i = 0; i < 8; ++i){
-	      if(first_step){
-	        Pos around = act + Dir(i);
-	      	if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
-	        	cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or  (unit(cell(around).id).type != Car and unit(cell(around).id).player != me()) ) and not stepped[around.i][around.j] and
-	       		not visited[around.i][around.j]){
-		          if(dist[around.i][around.j] > dist[act.i][act.j] + 1){
-		            dist[around.i][around.j] = dist[act.i][act.j] + 1;
-		            visited[around.i][around.j] = true;
-		            prev[around.i][around.j].first = act;
-		            prev[around.i][around.j].second = Dir(i);
-		            c.push(make_pair(dist[around.i][around.j],around));
-		          }
-	        }
-	        if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
-	          and cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or (unit(cell(around).id).type != Car and unit(cell(around).id).player != me())) and not stepped[around.i][around.j]
-	          and not visited[around.i][around.j]){
-		          if(dist[around.i][around.j] > dist[act.i][act.j] + 4){
-		            dist[around.i][around.j] = dist[act.i][act.j] + 4;
-		            visited[around.i][around.j] = true;
-		            prev[around.i][around.j].first = act;
-		            prev[around.i][around.j].second = Dir(i);
-		            c.push(make_pair(dist[around.i][around.j],around));
-		          }
-	        } 
-	      }
-	      else{
-	        Pos around = act + Dir(i);
-	        if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
-	        	cell(around).type != Station and (cell(around).id == -1 or  (unit(cell(around).id).type != Car and unit(cell(around).id).player != me()) ) and not stepped[around.i][around.j] and
-	         	not visited[around.i][around.j]){
-		          if(dist[around.i][around.j] > dist[act.i][act.j] + 1){
-		            dist[around.i][around.j] = dist[act.i][act.j] + 1;
-		            visited[around.i][around.j] = true;
-		            prev[around.i][around.j].first = act;
-		            prev[around.i][around.j].second = Dir(i);
-		            c.push(make_pair(dist[around.i][around.j],around));
-		          }
-	        }
-	        if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
-	         	and cell(around).type != Station and (cell(around).id == -1 or(unit(cell(around).id).type != Car and unit(cell(around).id).player != me())) and not stepped[around.i][around.j]
-	         	and not visited[around.i][around.j]){
-		          if(dist[around.i][around.j] > dist[act.i][act.j] + 4){
-		            dist[around.i][around.j] = dist[act.i][act.j] + 4;
-		            visited[around.i][around.j] = true;
-		            prev[around.i][around.j].first = act;
-		            prev[around.i][around.j].second = Dir(i);
-		            c.push(make_pair(dist[around.i][around.j],around));
-		          }
-	        } 
-	      }   
-	      if(i == 7 ) first_step = false;     
-	    }
-	  }
-	  if(found){
-	    while(prev[res.i][res.j].first != p) res = prev[res.i][res.j].first;
-	    command(id, prev[res.i][res.j].second);
-	    stepped[res.i][res.j] = true;
-	    return true;
-	  }
-	  return false; 
-	}
+    /*Dijkstra algorithm to find the nearest enemy warriors */
+    bool dijkstra_find_warrior(int id,Pos p,_MV& stepped){
+      _MD dist(60,vector<int>(60,9999999));
+      _MV visited(60,vector<bool>(60,false));
+      dist[p.i][p.j] = 0; visited[p.i][p.j] = true;
+      vector < vector< pair<Pos,Dir> > > prev(60, vector< pair<Pos,Dir> >(60));
+      priority_queue < pair<int,Pos>, vector<pair<int,Pos> >, greater<pair<int,Pos>> > c;
+      c.push(make_pair(0,p));
+      bool found = false;
+      Pos res;
+      while(not c.empty() and not found){
+        Pos act = c.top().second; c.pop();
+        if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Warrior and unit(cell(act).id).player != me() and find_warrior(act) and not stepped[act.i][act.j]) {
+          res = act;
+          found = true;
+        }
+        bool first_step = true;
+        for(int i = 0; i < 8; ++i){
+          if(first_step){
+            Pos around = act + Dir(i);
+            if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
+                cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or  (unit(cell(around).id).type != Car and unit(cell(around).id).player != me()) ) and not stepped[around.i][around.j] and
+                not visited[around.i][around.j]){
+                  if(dist[around.i][around.j] > dist[act.i][act.j] + 1){
+                    dist[around.i][around.j] = dist[act.i][act.j] + 1;
+                    visited[around.i][around.j] = true;
+                    prev[around.i][around.j].first = act;
+                    prev[around.i][around.j].second = Dir(i);
+                    c.push(make_pair(dist[around.i][around.j],around));
+                  }
+            }
+            if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
+              and cell(around).type != Station and kill_warrior(around) and (cell(around).id == -1 or (unit(cell(around).id).type != Car and unit(cell(around).id).player != me())) and not stepped[around.i][around.j]
+              and not visited[around.i][around.j]){
+                  if(dist[around.i][around.j] > dist[act.i][act.j] + 4){
+                    dist[around.i][around.j] = dist[act.i][act.j] + 4;
+                    visited[around.i][around.j] = true;
+                    prev[around.i][around.j].first = act;
+                    prev[around.i][around.j].second = Dir(i);
+                    c.push(make_pair(dist[around.i][around.j],around));
+                  }
+            } 
+          }
+          else{
+            Pos around = act + Dir(i);
+            if(pos_ok(around) and cell(around).type != Desert and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall and 
+                cell(around).type != Station and (cell(around).id == -1 or  (unit(cell(around).id).type != Car and unit(cell(around).id).player != me()) ) and not stepped[around.i][around.j] and
+                not visited[around.i][around.j]){
+                  if(dist[around.i][around.j] > dist[act.i][act.j] + 1){
+                    dist[around.i][around.j] = dist[act.i][act.j] + 1;
+                    visited[around.i][around.j] = true;
+                    prev[around.i][around.j].first = act;
+                    prev[around.i][around.j].second = Dir(i);
+                    c.push(make_pair(dist[around.i][around.j],around));
+                  }
+            }
+            if(pos_ok(around) and cell(around).type != Road and cell(around).type != City and cell(around).type != Water and cell(around).type != Wall 
+                and cell(around).type != Station and (cell(around).id == -1 or(unit(cell(around).id).type != Car and unit(cell(around).id).player != me())) and not stepped[around.i][around.j]
+                and not visited[around.i][around.j]){
+                  if(dist[around.i][around.j] > dist[act.i][act.j] + 4){
+                    dist[around.i][around.j] = dist[act.i][act.j] + 4;
+                    visited[around.i][around.j] = true;
+                    prev[around.i][around.j].first = act;
+                    prev[around.i][around.j].second = Dir(i);
+                    c.push(make_pair(dist[around.i][around.j],around));
+                  }
+            } 
+          }   
+          if(i == 7 ) first_step = false;     
+        }
+      }
+      if(found){
+        while(prev[res.i][res.j].first != p) res = prev[res.i][res.j].first;
+        command(id, prev[res.i][res.j].second);
+        stepped[res.i][res.j] = true;
+        return true;
+      }
+      return false; 
+    }
 
 
  Dir direccio(const _MP& m, Pos destinacio, Pos inici){
@@ -336,10 +336,10 @@ struct PLAYER_NAME : public Player {
       for(int i = 0; i < 8; ++i){
         Pos around = aux + Dir(i);
         if(pos_ok(around) and cell(around).type != Wall and cell(around).type != Water and not stepped[around.i][around.j] and cell(around).type != City and cell(around).type != Station and cell(around).type != Desert
-        	and not visited[around.i][around.j] and (cell(around).id == -1 or (unit(cell(around).id).type != Car))){
-          	visited[around.i][around.j] = true;
-          	m[around.i][around.j] = aux;
-          	c_no_visitat.push(around);
+            and not visited[around.i][around.j] and (cell(around).id == -1 or (unit(cell(around).id).type != Car))){
+            visited[around.i][around.j] = true;
+            m[around.i][around.j] = aux;
+            c_no_visitat.push(around);
         }
       }
     }
@@ -365,7 +365,7 @@ struct PLAYER_NAME : public Player {
           Pos aux1 = p + d; stepped[aux1.i][aux1.j] = true;
         }
       } 
-  	}
+    }
   }
       
   
@@ -383,39 +383,39 @@ struct PLAYER_NAME : public Player {
   }
   
   /*check that the nearest car is at least far away from distance 2 */
-	bool radar_cotxe(Pos p){
-	  queue < pair<Pos,int>> c;
-	  _MV visited(60,vector <bool>(60,false));
-	  c.push(make_pair(p,0));
-	  visited[p.i][p.j] = true;
-	  while(not c.empty() and c.front().second <= 4){
-	    Pos act = c.front().first; int dd = c.front().second + 1; c.pop();
-	    if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Road and unit(cell(act).id).food > 4) return true;
-	    else if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Desert and adjacent1(act)) return true;
-	    else if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Desert and dd-1 <= 1) return true;
-	    for(int i = 0; i < 8; ++i){
-	      Pos around = act + Dir(i);
-	      if(pos_ok(around) and not visited[around.i][around.j] and (cell(around).type == Desert or cell(around).type == Road)){
-	        visited[around.i][around.j] = true;
-	        c.push(make_pair(around,dd));
-	      }
-	    } 
-	  }
-	  return false;
-	}
+    bool radar_cotxe(Pos p){
+      queue < pair<Pos,int>> c;
+      _MV visited(60,vector <bool>(60,false));
+      c.push(make_pair(p,0));
+      visited[p.i][p.j] = true;
+      while(not c.empty() and c.front().second <= 4){
+        Pos act = c.front().first; int dd = c.front().second + 1; c.pop();
+        if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Road and unit(cell(act).id).food > 4) return true;
+        else if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Desert and adjacent1(act)) return true;
+        else if(pos_ok(act) and cell(act).id != -1 and unit(cell(act).id).type == Car and unit(cell(act).id).player != me() and cell(act).type == Desert and dd-1 <= 1) return true;
+        for(int i = 0; i < 8; ++i){
+          Pos around = act + Dir(i);
+          if(pos_ok(around) and not visited[around.i][around.j] and (cell(around).type == Desert or cell(around).type == Road)){
+            visited[around.i][around.j] = true;
+            c.push(make_pair(around,dd));
+          }
+        } 
+      }
+      return false;
+    }
 
 
-	/*check wether the position p is safe or not (warrior)*/
-	bool see_car(Pos p){
-		if( cell(p).type == Road or (cell(p).type == Desert and adjacent1(p))){
-			if(radar_cotxe(p)) return true;
-		}
-	  for(int i = 0; i < 8; ++i){
-	    Pos p1 = p + Dir(i);
-	    if(pos_ok(p1) and cell(p1).id != -1 and unit(cell(p1).id).type == Car and unit(cell(p1).id).player != me()) return true;
-	  }
-	  return false;
-	}
+    /*check wether the position p is safe or not (warrior)*/
+    bool see_car(Pos p){
+        if( cell(p).type == Road or (cell(p).type == Desert and adjacent1(p))){
+            if(radar_cotxe(p)) return true;
+        }
+      for(int i = 0; i < 8; ++i){
+        Pos p1 = p + Dir(i);
+        if(pos_ok(p1) and cell(p1).id != -1 and unit(cell(p1).id).type == Car and unit(cell(p1).id).player != me()) return true;
+      }
+      return false;
+    }
 
   bool pos_safe_warrior(Pos p){
     for(int i = 0; i < 8; ++i){
@@ -466,7 +466,7 @@ struct PLAYER_NAME : public Player {
     for(int j = 0; j < 9; ++j){
       Pos aux = p + Dir(j);
       if(pos_ok(aux) and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not see_car(aux) and not stepped[aux.i][aux.j]){
-      	command(id,Dir(j));
+        command(id,Dir(j));
         stepped[aux.i][aux.j] = true; ++players[city][me()];
         return true;
       }
@@ -493,14 +493,14 @@ struct PLAYER_NAME : public Player {
     for(int j = 0; j < 9; ++j){
       Pos aux = p + Dir(j);
       if(pos_ok(aux) and (cell(aux).id == -1 or (unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and  not stepped[aux.i][aux.j]){
-      	command(id,Dir(j));
+        command(id,Dir(j));
         stepped[aux.i][aux.j] = true; ++players[city][me()];
         return true;
       }
     }
     command(id, None);  
     stepped[p.i][p.j] = true; ++players[city][me()];
-  	return true;    
+    return true;    
   }
 
 
@@ -511,7 +511,7 @@ struct PLAYER_NAME : public Player {
         Pos aux = p +Dir(i);
         if(pos_ok(aux) and cell(aux).id != -1 and unit(cell(aux).id).type == Warrior and unit(cell(aux).id).player != me()){
           if(not see_car(p)){
-           	command(id, Dir(i));
+            command(id, Dir(i));
             return;
           }
         }
@@ -611,7 +611,7 @@ struct PLAYER_NAME : public Player {
           } 
         }
         for(int i = 0; i < 8; ++i){
-        	Pos aux = p +Dir(i);
+            Pos aux = p +Dir(i);
           if(pos_ok(aux) and cell(aux).id != -1 and unit(cell(aux).id).type == Warrior and unit(cell(aux).id).player != me()){
             if(not see_car(p)){
               command(id, Dir(i));
@@ -631,13 +631,13 @@ struct PLAYER_NAME : public Player {
         }
         if(not gone){
           for(int i = 0; i < 8; ++i){
-	          Pos aux = p +Dir(i);
-	          if(pos_ok(aux) and cell(aux).id != -1 and unit(cell(aux).id).type == Warrior and unit(cell(aux).id).player != me()){
-	            if(not see_car(p)){
-	              command(id, Dir(i));
-	              return;
-	            }
-	          }
+              Pos aux = p +Dir(i);
+              if(pos_ok(aux) and cell(aux).id != -1 and unit(cell(aux).id).type == Warrior and unit(cell(aux).id).player != me()){
+                if(not see_car(p)){
+                  command(id, Dir(i));
+                  return;
+                }
+              }
           }              
           for(int j = 0; j < 9; ++j){
             Pos aux = p + Dir(j);
@@ -648,7 +648,7 @@ struct PLAYER_NAME : public Player {
             }
           }
                     
-        	for(int j = 0; j < 9; ++j){
+            for(int j = 0; j < 9; ++j){
             Pos aux = p + Dir(j);
             if(pos_ok(aux) and city[aux.i][aux.j] == city[p.i][p.j] and (cell(aux).id == -1 or(unit(cell(aux).id).player != me() and unit(cell(aux).id).type != Car)) and not see_car(aux) and not stepped[aux.i][aux.j]){
               command(id,Dir(j));
@@ -706,7 +706,7 @@ struct PLAYER_NAME : public Player {
           stepped[p.i][p.j] = true;
           return;
         }                       
-    	}
+        }
       else if(cell(p).type == City){
         for(int i = 0; i < 8; ++i){
           Pos aux = p +Dir(i);
@@ -839,7 +839,7 @@ struct PLAYER_NAME : public Player {
     }
   }  
  
-  
+  /*Initialize cities*/
   void start_city(V_CITY& cities, _MV& m_citi, _MD& city_matriu, int id, Pos p){
     if(not pos_ok(p) or cell(p).type != City or m_citi[p.i][p.j]) return;
     m_citi[p.i][p.j] = true;
@@ -848,7 +848,7 @@ struct PLAYER_NAME : public Player {
     for(int i = 0; i < 8; ++i) start_city(cities,m_citi,city_matriu, id, p + Dir(i));
   }
   
-  
+  /*Count the number of warriors of each player in every city*/
   void count_warriors(vector <vector<int> >& players, V_CITY& c){
     for(int i = 0; i < 8; ++i){
       for(auto w : c[i]){
@@ -863,7 +863,7 @@ struct PLAYER_NAME : public Player {
 
 
   void play () {
-    //initialitzacions
+    //initializations
     if(round() == 0){
       water = _MD(60,vector <int>(60,61));
       city = _MD(60,vector <int>(60,61));
